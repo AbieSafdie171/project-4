@@ -55,7 +55,7 @@ def open_time(control_dist_km, brevet_dist_km, brevet_start_time):
     remaining_distance = control_dist_km - distance_list[i - 1]
 
     # Calculates sum of each part until distance is < 0
-    while remaining_distance > 0:
+    while remaining_distance > 0 and i < len(diff_in_dist):
         hours = diff_in_dist[i - 1] // times_table[distance_list[i - 1]]
         minutes = ((diff_in_dist[i - 1] / times_table[
             distance_list[i - 1]]) - hours) * 60
@@ -143,7 +143,7 @@ def close_time(control_dist_km, brevet_dist_km, brevet_start_time):
     remaining_distance = control_dist_km - distance_list[i - 1]
 
     # Calculates sum of each part until distance is < 0
-    while remaining_distance > 0:
+    while remaining_distance > 0 and i < len(diff_in_dist):
         hours = diff_in_dist[i - 1] // times_table[distance_list[i - 1]]
         minutes = ((diff_in_dist[i - 1] / times_table[
             distance_list[i - 1]]) - hours) * 60
