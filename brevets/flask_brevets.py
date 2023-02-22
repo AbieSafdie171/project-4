@@ -18,6 +18,7 @@ import logging
 app = flask.Flask(__name__)
 CONFIG = config.configuration()
 
+
 ###
 # Pages
 ###
@@ -51,15 +52,34 @@ def _calc_times():
     """
     app.logger.debug("Got a JSON request")
     km = request.args.get('km', 999, type=float)
+    br_dist = request.args.get('brevet_distance', 999, type=float)
+    br_start_time = request.args.get('brevet_start_time', arrow.now(), type=str)
+
     app.logger.debug("km={}".format(km))
+    app.logger.debug("distance={}".format(br_dist))
+    app.logger.debug("start_time={}".format(br_start_time))
     app.logger.debug("request.args: {}".format(request.args))
     # FIXME!
     # Right now, only the current time is passed as the start time
     # and control distance is fixed to 200
     # You should get these from the webpage!
-    open_time = acp_times.open_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
-    close_time = acp_times.close_time(km, 200, arrow.now().isoformat).format('YYYY-MM-DDTHH:mm')
+
+    input_time = arrow.get(br_start_time).format('YYYY-MM-DDTHH:mm')
+    new_input_time = arrow.get(input_time)
+
+    open_time = acp_times.open_time(km, br_dist, new_input_time)
+    close_time = acp_times.close_time(km, br_dist, new_input_time)
+
+    close_time = close_time.format('YYYY-MM-DDTHH:mm')
+    open_time = open_time.format('YYYY-MM-DDTHH:mm')
+
+    app.logger.debug("--------OPEN TIME--------")
+    app.logger.debug(open_time)
+    app.logger.debug("--------CLOSE TIME--------")
+    app.logger.debug(close_time)
+
     result = {"open": open_time, "close": close_time}
+
     return flask.jsonify(result=result)
 
 
